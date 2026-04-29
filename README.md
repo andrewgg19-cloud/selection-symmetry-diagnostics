@@ -20,6 +20,15 @@ Install dependencies:
 pip install -r requirements.txt
 python scripts/run_all.py
 latexmk -pdf paper/main.tex
+## Reproducibility
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+python scripts/run_all.py
+latexmk -pdf paper/main.tex
+
 ## Scope
 
 This work is a model-independent operational diagnostic. It does not propose new physics and does not reinterpret established experiments as invalid. It provides reproducible stress tests for selection symmetry, biased filtering, information bounds, and robustness of correlations under data selection.
