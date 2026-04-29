@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "Selection Symmetry as an Operational Diagnostic for Correlations under Data Filtering"
+message: "If you use this repository, please cite it as below."
+type: software
+authors:
+  - family-names: "Garcia"
+    given-names: "German"
+date-released: 2026-04-29
+repository-code: "https://github.com/andrewgg19-cloud/selection-symmetry-diagnostics"
+license: MIT
+keywords:
+  - selection symmetry
+  - data filtering
+  - reproducibility
+  - Bell inequalities
+  - information bounds
+  - robust signal criterion
