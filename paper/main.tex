@@ -1,1 +1,418 @@
-/C:/Users/Andre/Documents/Codex/2026-04-28/crea-un-repositorio-reproducible-para-el/github_upload_clean/paper/main.tex
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{caption}
+
+\graphicspath{{figures/}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{criterion}{Criterion}
+
+\title{Selection Symmetry as an Operational Diagnostic for Correlations under Data Filtering\\
+\large Reproducible Stress Tests across Bell, Biomedical, and Dataset-Shift Examples}
+\author{German Garcia}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We formulate selection symmetry as an operational criterion for interpreting correlations under data filtering. Let \(F \in \{0,1\}\) denote a selection function and let \(R\) denote an observable or derived response. The central diagnostic is whether the selected data contain information about \(R\) through \(F\). In the symmetric case, \(R \perp F\), equivalently \(I(R;F)=0\). When this condition fails, post-selected correlations can be inflated even in a classical model. We present reproducible simulations for biased CHSH filtering, an information lower bound for apparent Bell excesses under stated diagnostic assumptions, and archetypal selection structures spanning symmetric, biased, borderline, robust, and non-robust regimes. The framework is model-independent and operational; it does not propose new physical dynamics.
+\end{abstract}
+
+\noindent\textbf{Keywords:} selection bias; data filtering; mutual information; Bell-CHSH diagnostics; causal inference; reproducible simulation.
+
+\section{Introduction}
+
+Modern experiments and observational studies rely on selection: inclusion criteria, coincidence windows, triggers, reconstruction pipelines, quality cuts, near/far event definitions, and other filters. These procedures are scientifically necessary, but they also create an operational question: does the filter carry information about the reported observable?
+
+This paper organizes that question around a simple symmetry condition. Given a response \(R\) and a binary selection function \(F\), selection symmetry is the requirement
+\begin{equation}
+R \perp F.
+\end{equation}
+Equivalently, the selected status should contain no information about the response,
+\begin{equation}
+I(R;F)=0.
+\end{equation}
+The purpose is diagnostic. A violation of this condition does not by itself invalidate an experiment, nor does it imply new physics. It identifies the amount of selection information that must be controlled, bounded, or excluded by the analysis.
+
+The framework is deliberately narrower than a full experimental analysis. It does not model detector response, backgrounds, likelihood construction, nuisance parameters, or systematic correlations unless those ingredients are explicitly encoded in \(F\) and \(R\). Its role is to expose one operational channel: information about the reported response that enters through the data-selection rule.
+
+The central claim is therefore methodological: this paper develops a reproducible and interdisciplinary framework for diagnosing when a correlation is invariant under data selection and when it can be explained as information introduced by the filtering mechanism itself.
+
+The paper tests this claim through four linked components. The CHSH simulation shows how a filter can create an apparent correlation. The information bound quantifies the minimum information that such a filter must carry under explicit assumptions. The biomedical dropout example shows the same logic in an observational-data setting. The archetypal structures then place symmetric, biased, borderline, robust, and non-robust cases on one diagnostic scale. All examples are synthetic stress tests: their role is pedagogical and diagnostic, not evidentiary about any real experiment or dataset.
+
+\section{Related Work}
+
+The present framework sits at the intersection of several established literatures. In foundations of quantum mechanics, Bell's theorem \cite{Bell1964} and the CHSH formulation \cite{CHSH1969} made explicit that observed correlations depend on the relation between measured events and the ensemble to which the theoretical claim applies. Detection inefficiency, fair sampling, and data rejection were studied directly by Pearle \cite{Pearle1970}, Clauser and Horne \cite{ClauserHorne1974}, Garg and Mermin \cite{GargMermin1987}, and later loophole analyses \cite{Larsson2014}. Experimental Bell tests, from the time-varying-analyzer experiment of Aspect, Dalibard, and Roger \cite{Aspect1982} to loophole-free tests \cite{Hensen2015,Giustina2015,Shalm2015}, provide the natural physical background for the present diagnostic. The simulations in this paper are not alternatives to those results; they use the Bell-CHSH setting as a compact stress test for selection-dependent correlations.
+
+In causal inference and statistics, selection mechanisms are treated as part of the data-generating process rather than as neutral bookkeeping. Pearl's graphical account of causal inference \cite{Pearl2009} and the epidemiological/statistical framework of Hernan and Robins \cite{HernanRobins2020} emphasize that conditioning and selection can change the meaning of an association. Our notation \(R\perp F\) is deliberately compatible with this tradition: it asks whether the inclusion mechanism \(F\) is independent of the response being interpreted.
+
+The same issue appears in current data-intensive science. Missing-data theory treats the observation mechanism as part of the statistical problem \cite{LittleRubin2019}. Machine-learning work on sample-selection bias and dataset shift studies the failure of training or evaluation data to represent the target population \cite{Zadrozny2004,QuinoneroCandela2009}. Closely related documentation frameworks such as Datasheets for Datasets \cite{Gebru2021} and Model Cards \cite{Mitchell2019} ask that datasets and models disclose collection, evaluation, and intended-use conditions. Selection symmetry complements that agenda by turning one documentation question into a quantitative diagnostic: does the inclusion or evaluation filter carry information about the reported response? In single-cell genomics, quality-control filtering is a necessary step, but it can also shape the cell population that remains for downstream inference \cite{LueckenTheis2019,Amezquita2020}. These literatures motivate the non-physics examples used below.
+
+The information-theoretic part of the paper uses standard mutual information language \cite{CoverThomas2006} and Pinsker-type control \cite{Pinsker1964} to express selection as an information channel. Finally, the repository follows the reproducible-research norm that computational claims should be regenerable from code and data products \cite{Peng2011}.
+
+\section{Relation to Existing Selection-Correction Methods}
+
+Selection symmetry is not intended to replace existing correction methods. Instead, it gives a compact diagnostic question that can be asked before, during, or after domain-specific correction: does the selection variable carry information about the response being interpreted?
+
+\begin{table}[ht]
+\centering
+\caption{How selection symmetry relates to established selection and filtering frameworks.}
+\label{tab:existing-methods}
+\begin{tabular}{p{0.18\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.22\linewidth}}
+\toprule
+Domain & Existing approach & What it controls & What selection symmetry adds \\
+\midrule
+Missing data & MCAR/MAR/MNAR models, likelihood methods, imputation, inverse probability weighting & Missingness and observation mechanisms & Direct diagnostic \(I(R;F)\) for response information in follow-up or observation \\
+Causal inference & DAGs, collider-bias analysis, adjustment strategies & Causal structure and conditioning paths & Operational independence check \(R\perp F\) for an explicit selection node \\
+Machine learning & Dataset shift, covariate shift, reweighting, dataset/model documentation & Train/test mismatch and evaluation conditions & Quantifies whether dataset inclusion or benchmark filtering is informative about reported outcomes \\
+Bell tests & Fair sampling, detection-efficiency analysis, loophole-free design & Event representativeness and loophole closure & Expresses response-dependent event selection as a selection-information channel \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The contribution is therefore complementary. If a domain already has a correction method, selection symmetry can be used to formulate the diagnostic target that correction should address. If no correction is possible because the full selection mechanism is unavailable, it can still organize synthetic sensitivity analyses.
+
+\section{Formal Framework}
+
+Let \((\Omega,\mathcal{A},P)\) be a probability space. Let \(R:\Omega \to \mathcal{R}\) be an observable and \(F:\Omega \to \{0,1\}\) a selection function. The reported distribution is often the conditional law \(P(R \mid F=1)\), while the unfiltered operational reference is \(P(R)\).
+
+\begin{theorem}[Invariance theorem]
+If \(R \perp F\), then for all measurable \(A \subseteq \mathcal{R}\) with \(P(F=1)>0\),
+\begin{equation}
+P(R \in A \mid F=1)=P(R \in A).
+\end{equation}
+Consequently, every statistic that depends only on the distribution of \(R\) is invariant under selection.
+\end{theorem}
+
+\begin{proof}
+Independence gives \(P(R \in A,F=1)=P(R \in A)P(F=1)\). Dividing by \(P(F=1)\) yields the result.
+\end{proof}
+
+\begin{theorem}[No-Go theorem]
+If an observed post-selected statistic differs from its unselected value for a statistic determined by the law of \(R\), then selection symmetry cannot hold. In particular,
+\begin{equation}
+P(R\mid F=1)\neq P(R)
+\quad\Longrightarrow\quad
+I(R;F)>0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+If \(I(R;F)=0\), then \(R\) and \(F\) are independent for discrete \(F\), which implies \(P(R\mid F=1)=P(R)\). The contrapositive proves the claim.
+\end{proof}
+
+\begin{criterion}[Robust signal criterion]
+Let \(b_{\mathrm{req}}\) denote the minimum selection-bias scale required to reproduce a reported signal under a specified diagnostic model, and let \(b_{\max}\) denote the maximum bias scale compatible with calibration, sidebands, controls, or external constraints. A signal is robust against that modeled selection explanation when
+\begin{equation}
+b_{\mathrm{req}} > b_{\max}.
+\end{equation}
+\end{criterion}
+
+This criterion is not a discovery rule. It is an operational separation test: the bias needed to explain the effect must exceed the bias still allowed by the analysis.
+
+It is useful to report the dimensionless selection-robustness index
+\begin{equation}
+\rho_{\mathrm{sel}}=\frac{b_{\mathrm{req}}}{b_{\max}},
+\end{equation}
+when \(b_{\max}>0\). Values \(\rho_{\mathrm{sel}}>1\) indicate robustness against the modeled selection explanation, values near one indicate a borderline regime, and values below one indicate that the selection explanation remains viable.
+
+\section{Biased CHSH Filtering}
+
+This section addresses the first half of the central claim: a correlation may fail to be invariant under data selection because the filter itself introduces response information.
+
+For CHSH \cite{CHSH1969}, define four setting-conditioned products \(R_{xy}=A_xB_y\in\{-1,1\}\), and
+\begin{equation}
+S = E_{00}+E_{01}+E_{10}-E_{11}.
+\end{equation}
+The script \texttt{simulate\_chsh\_biased\_filtering.py} generates classical preassigned outcomes and applies a setting-dependent selection function. Without post-selection this model is local. With asymmetric filtering, the conditional correlations can exceed the local CHSH bound.
+
+This simulation is a stress test, not a physical model of a loophole-free Bell experiment. It shows that once the selected sample is allowed to carry response information, a post-selected statistic can acquire structure that was absent in the unselected ensemble.
+
+In the language of the framework, the post-selected CHSH excess is not interpreted as a new physical effect. It is interpreted as evidence that \(F\) has become informative about \(R\), which is precisely the failure mode that selection symmetry is meant to diagnose.
+
+The Bell-facing point is narrow but useful. Standard loophole-free Bell tests are designed to remove precisely the kind of dependence that would make the selected event sample unrepresentative. Our contribution is not to reopen those experimental conclusions. It is to express the same concern in a reusable operational form: if event selection is correlated with the reported product outcome, then \(I(R;F)>0\), and the selected CHSH statistic is no longer invariant under filtering.
+
+\begin{table}[ht]
+\centering
+\caption{Representative output from the biased CHSH filtering simulation. The unfiltered model is classical; the apparent excess arises only after response-dependent selection.}
+\label{tab:chsh-results}
+\begin{tabular}{lrrrr}
+\toprule
+Selection bias & Selected fraction \(p\) & \(S\) & \(I(R;F)\) [nats] & \(p(S-2)^2/32\) \\
+\midrule
+0.00 & 0.549 & -0.001 & \(5.3\times 10^{-7}\) & 0.000 \\
+0.44 & 0.551 & 3.200 & 0.101 & 0.0248 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.82\linewidth]{chsh_biased_filtering.png}
+\caption{A classical CHSH simulation with biased filtering. As the filter becomes more correlated with the target product outcomes, the post-selected CHSH value rises while \(I(R;F)\) becomes positive.}
+\label{fig:chsh}
+\end{figure}
+
+\section{Information Bounds}
+
+The previous section shows that selection can introduce an apparent correlation. This section asks how much information the filter must carry if such an explanation is to be viable.
+
+The diagnostic lower bound used in this repository is
+\begin{equation}
+I_{\min} \geq \frac{p(S-2)^2}{32},
+\end{equation}
+where \(p=P(F=1)\) is the selected fraction and \(S>2\) is the observed CHSH value. This expression should be read operationally: any post-selected excess above the local bound requires nonzero selection information in the diagnostic channel.
+
+The bound is not presented as a universal theorem about all possible Bell experiments. It is a diagnostic lower bound under an explicit operational model: the observed CHSH excess is attributed to a response-dependent selection channel, and the strength of that channel is measured by the information that \(F\) carries about the response variable \(R\). The numerical constant is not the central claim. The central claim is quadratic: producing an excess \(\Delta\) through selection requires selection information scaling at least as \(p\Delta^2\), up to a model-dependent calibration constant.
+
+\begin{proposition}[Diagnostic CHSH information bound under a fixed calibration]
+Let \(S>2\) be a post-selected CHSH value produced in a diagnostic model where the unselected reference obeys the local bound \(S_0\leq 2\). Let \(p=P(F=1)\) and let \(\Delta=S-2\). Suppose the post-selected excess requires a response-level selection displacement \(d\) satisfying
+\begin{equation}
+d \geq \frac{\Delta}{4},
+\end{equation}
+where \(d\) is an operational total-variation scale between selected and unselected response laws. If the information carried by the selection channel obeys the conservative Pinsker-type control
+\begin{equation}
+I(R;F)\geq \frac{p d^2}{2},
+\end{equation}
+then
+\begin{equation}
+I(R;F)\geq \frac{p(S-2)^2}{32}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The diagnostic assumption \(d\geq \Delta/4\) says that generating CHSH excess \(\Delta\) through selection requires at least that much response-level displacement. Substituting this into the information control gives
+\begin{equation}
+I(R;F)\geq \frac{p d^2}{2}
+\geq \frac{p}{2}\left(\frac{\Delta}{4}\right)^2
+=\frac{p(S-2)^2}{32}.
+\end{equation}
+\end{proof}
+
+The constant \(1/4\) is therefore a calibration choice for this diagnostic model, not a universal physical constant. A different operational definition of selection distance may change constants, but not the qualitative requirement that a nonzero CHSH excess attributed to filtering requires nonzero selection information. This is the relevant point for the present framework: if a correlation is explained by filtering, then the filter must carry information about the reported response.
+
+The same logic gives a domain-independent template. If a statistic exceeds its null or reference value by \(\Delta\), and if producing that excess through selection requires an operational displacement \(d\geq \alpha\Delta\), then any Pinsker-type control \(I(R;F)\geq p d^2/2\) implies
+\begin{equation}
+I_{\min}\geq \frac{p\alpha^2\Delta^2}{2}.
+\end{equation}
+The CHSH expression above is the special case \(\alpha=1/4\). In other domains, \(\alpha\) should be treated as a diagnostic calibration constant determined by the chosen statistic and selection model.
+
+Thus the bound turns the qualitative question ``could this be filtering?'' into a quantitative diagnostic: if filtering explains the excess, then the selection variable must carry at least a specified amount of information about the response.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.82\linewidth]{information_bounds_bell.png}
+\caption{Information lower bound for CHSH excess as a function of the selected fraction \(p\) and the observed value \(S\).}
+\label{fig:info}
+\end{figure}
+
+\section{Biomedical Dropout Example}
+
+This section transfers the same diagnostic from a physics-inspired stress test to a biological and observational-data setting.
+
+To make the framework less dependent on physics examples, the repository includes a synthetic biomedical dropout simulation. A cohort is generated with treatment assignment, baseline severity, binary response \(R\), and follow-up status \(F\). Dropout is made more likely for non-responders and severe subjects, so \(F\) is not independent of \(R\). The example is not a clinical claim; it is a controlled demonstration of how response-dependent follow-up can distort an observed treatment contrast.
+
+The point is not that the simulated treatment effect is clinically meaningful. The point is that the same criterion, \(R\perp F\), identifies why the observed follow-up sample no longer represents the full response distribution.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.82\linewidth]{biomedical_dropout_selection.png}
+\caption{Synthetic biomedical dropout example. The full-cohort treatment contrast differs from the observed follow-up contrast because follow-up status carries information about response.}
+\label{fig:biomed}
+\end{figure}
+
+\section{Archetypal Selection Structures}
+
+This section organizes the diagnostic outcomes rather than adding another empirical claim.
+
+The same diagnostic language can describe several kinds of selection structure. A Bell-like structure may involve coincidence or event-pair selection. An AI/ML structure may involve benchmark curation, dataset inclusion, evaluation-set filtering, or documentation of dataset/model limitations. A single-cell omics structure may involve quality-control thresholds that remove low-quality cells but may also change cell-type representation. A biomedical follow-up structure may involve dropout that depends on response.
+
+We do not apply the criterion quantitatively to existing experiments or real datasets. The full selection mechanism, curation pipeline, quality-control policy, control samples, and uncertainty model are not available here. Real application would require access to the definition of \(F\), the observable \(R\), control samples, and the uncertainty model.
+
+Because there is no common physical control group across these archetypal domains, the repository uses synthetic controls and edge cases. The rows are not experimental claims. They are counterfactual diagnostic scenarios that share the same variables: an allowed selection-bias scale \(b_{\max}\), a required explanatory bias \(b_{\mathrm{req}}\), and a proxy for selection information.
+
+The representative cases are chosen to occupy both sides of the diagnostic equilibrium:
+\begin{itemize}
+\item a symmetric control with \(I(R;F)\approx 0\);
+\item a biased false-positive case where selection can explain the signal;
+\item a borderline case where \(b_{\mathrm{req}}\approx b_{\max}\);
+\item a robust case where \(b_{\mathrm{req}}>b_{\max}\);
+\item a non-robust toy case where \(b_{\mathrm{req}}\leq b_{\max}\).
+\end{itemize}
+
+Figure~\ref{fig:archetypes} is therefore schematic and diagnostic. It does not compare the evidentiary strength or discovery status of real studies. It compares only archetypal selection structures under shared diagnostic coordinates.
+
+The role of these archetypes is to prevent the framework from being merely confirmatory. A useful diagnostic must show what symmetry, bias, ambiguity, robustness, and non-robustness look like under the same notation.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.82\linewidth]{archetypal_selection_structures.png}
+\caption{Archetypal selection structures for the robust-signal diagnostic. The examples deliberately include symmetric, biased, borderline, robust, and non-robust scenarios. Values are illustrative operational scales generated by the reproducible script, not experimental measurements.}
+\label{fig:archetypes}
+\end{figure}
+
+\section{Discussion}
+
+Selection symmetry provides a compact diagnostic for deciding when filtering is harmless for a reported correlation. The condition \(R\perp F\) is strong, but its failure can be quantified by \(I(R;F)\) or bounded through experiment-specific controls. When a direct control group is unavailable, synthetic counterfactuals can still test whether the proposed diagnostic behaves sensibly across null, biased, borderline, robust, and non-robust regimes. Apparent Bell violations in a classical post-selection model and biased treatment contrasts in a dropout model illustrate the same central risk: filtering can manufacture or inflate correlations when it is correlated with response variables.
+
+The proposed framework is intentionally conservative. It does not replace domain-specific modeling, detector calibration, uncertainty propagation, or statistical inference. Instead, it supplies a common operational vocabulary for asking whether the data-selection mechanism itself has become an information channel for the reported result.
+
+Each computational component supports the same thesis from a different angle: invariance is expressed as \(R\perp F\), failure of invariance is measured by \(I(R;F)>0\), robustness is summarized by \(b_{\mathrm{req}}>b_{\max}\), and reproducibility is provided by scripts that regenerate the diagnostics, figures, and tables.
+
+\section{Interdisciplinary Position}
+
+The contribution is methodological rather than disciplinary. Selection symmetry connects ideas that appear separately in experimental physics, causal inference, statistics, information theory, and reproducible computational science. The framework is therefore intended for readers interested in how correlations survive, fail, or become ambiguous under data-selection procedures.
+
+This positioning is also a limitation. Without access to an experiment's internal event definition, reconstruction pipeline, calibration samples, and uncertainty model, the criterion should not be used to judge a real experiment quantitatively. Its present role is to define a portable diagnostic language and to demonstrate that language in reproducible synthetic settings.
+
+\section{Reproducibility}
+
+All numerical outputs are generated by scripts in \texttt{scripts/} with fixed seeds. CSV files are written to \texttt{results/}, and figures are written to \texttt{paper/figures/}. The intended commands are:
+\begin{verbatim}
+pip install -r requirements.txt
+python scripts/run_all.py
+python -m unittest discover -s tests
+latexmk -pdf paper/main.tex
+\end{verbatim}
+
+\begin{thebibliography}{99}
+
+\bibitem{Bell1964}
+J. S. Bell.
+\newblock On the Einstein Podolsky Rosen paradox.
+\newblock \emph{Physics Physique Fizika}, 1:195--200, 1964.
+\newblock doi:10.1103/PhysicsPhysiqueFizika.1.195.
+
+\bibitem{CHSH1969}
+J. F. Clauser, M. A. Horne, A. Shimony, and R. A. Holt.
+\newblock Proposed experiment to test local hidden-variable theories.
+\newblock \emph{Physical Review Letters}, 23:880--884, 1969.
+\newblock doi:10.1103/PhysRevLett.23.880.
+
+\bibitem{Pearle1970}
+P. M. Pearle.
+\newblock Hidden-variable example based upon data rejection.
+\newblock \emph{Physical Review D}, 2:1418--1425, 1970.
+\newblock doi:10.1103/PhysRevD.2.1418.
+
+\bibitem{ClauserHorne1974}
+J. F. Clauser and M. A. Horne.
+\newblock Experimental consequences of objective local theories.
+\newblock \emph{Physical Review D}, 10:526--535, 1974.
+\newblock doi:10.1103/PhysRevD.10.526.
+
+\bibitem{GargMermin1987}
+A. Garg and N. D. Mermin.
+\newblock Detector inefficiencies in the Einstein-Podolsky-Rosen experiment.
+\newblock \emph{Physical Review D}, 35:3831--3835, 1987.
+\newblock doi:10.1103/PhysRevD.35.3831.
+
+\bibitem{Aspect1982}
+A. Aspect, J. Dalibard, and G. Roger.
+\newblock Experimental test of Bell's inequalities using time-varying analyzers.
+\newblock \emph{Physical Review Letters}, 49:1804--1807, 1982.
+\newblock doi:10.1103/PhysRevLett.49.1804.
+
+\bibitem{Larsson2014}
+J.-A. Larsson.
+\newblock Loopholes in Bell inequality tests of local realism.
+\newblock \emph{Journal of Physics A: Mathematical and Theoretical}, 47:424003, 2014.
+\newblock doi:10.1088/1751-8113/47/42/424003.
+
+\bibitem{Hensen2015}
+B. Hensen et al.
+\newblock Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres.
+\newblock \emph{Nature}, 526:682--686, 2015.
+\newblock doi:10.1038/nature15759.
+
+\bibitem{Giustina2015}
+M. Giustina et al.
+\newblock Significant-loophole-free test of Bell's theorem with entangled photons.
+\newblock \emph{Physical Review Letters}, 115:250401, 2015.
+\newblock doi:10.1103/PhysRevLett.115.250401.
+
+\bibitem{Shalm2015}
+L. K. Shalm et al.
+\newblock Strong loophole-free test of local realism.
+\newblock \emph{Physical Review Letters}, 115:250402, 2015.
+\newblock doi:10.1103/PhysRevLett.115.250402.
+
+\bibitem{Pearl2009}
+J. Pearl.
+\newblock \emph{Causality: Models, Reasoning, and Inference}.
+\newblock Cambridge University Press, 2nd edition, 2009.
+
+\bibitem{HernanRobins2020}
+M. A. Hernan and J. M. Robins.
+\newblock \emph{Causal Inference: What If}.
+\newblock Chapman \& Hall/CRC, Boca Raton, 2020.
+
+\bibitem{LittleRubin2019}
+R. J. A. Little and D. B. Rubin.
+\newblock \emph{Statistical Analysis with Missing Data}.
+\newblock Wiley, 3rd edition, 2019.
+\newblock doi:10.1002/9781119482260.
+
+\bibitem{Zadrozny2004}
+B. Zadrozny.
+\newblock Learning and evaluating classifiers under sample selection bias.
+\newblock In \emph{Proceedings of the 21st International Conference on Machine Learning}, 2004.
+\newblock doi:10.1145/1015330.1015425.
+
+\bibitem{QuinoneroCandela2009}
+J. Quinonero-Candela, M. Sugiyama, A. Schwaighofer, and N. D. Lawrence, editors.
+\newblock \emph{Dataset Shift in Machine Learning}.
+\newblock MIT Press, 2009.
+
+\bibitem{Gebru2021}
+T. Gebru, J. Morgenstern, B. Vecchione, J. W. Vaughan, H. Wallach, H. Daume III, and K. Crawford.
+\newblock Datasheets for datasets.
+\newblock \emph{Communications of the ACM}, 64(12):86--92, 2021.
+\newblock doi:10.1145/3458723.
+
+\bibitem{Mitchell2019}
+M. Mitchell, S. Wu, A. Zaldivar, P. Barnes, L. Vasserman, B. Hutchinson, E. Spitzer, I. D. Raji, and T. Gebru.
+\newblock Model cards for model reporting.
+\newblock In \emph{Proceedings of the Conference on Fairness, Accountability, and Transparency}, pages 220--229, 2019.
+\newblock doi:10.1145/3287560.3287596.
+
+\bibitem{LueckenTheis2019}
+M. D. Luecken and F. J. Theis.
+\newblock Current best practices in single-cell RNA-seq analysis: a tutorial.
+\newblock \emph{Molecular Systems Biology}, 15:e8746, 2019.
+\newblock doi:10.15252/msb.20188746.
+
+\bibitem{Amezquita2020}
+R. A. Amezquita et al.
+\newblock Orchestrating single-cell analysis with Bioconductor.
+\newblock \emph{Nature Methods}, 17:137--145, 2020.
+\newblock doi:10.1038/s41592-019-0654-x.
+
+\bibitem{CoverThomas2006}
+T. M. Cover and J. A. Thomas.
+\newblock \emph{Elements of Information Theory}.
+\newblock Wiley, 2nd edition, 2006.
+
+\bibitem{Pinsker1964}
+M. S. Pinsker.
+\newblock \emph{Information and Information Stability of Random Variables and Processes}.
+\newblock Holden-Day, San Francisco, 1964.
+
+\bibitem{Peng2011}
+R. D. Peng.
+\newblock Reproducible research in computational science.
+\newblock \emph{Science}, 334(6060):1226--1227, 2011.
+\newblock doi:10.1126/science.1213847.
+
+\end{thebibliography}
+
+\end{document}
+
