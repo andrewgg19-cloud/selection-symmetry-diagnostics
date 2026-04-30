@@ -20,7 +20,14 @@ Install dependencies:
 pip install -r requirements.txt
 python scripts/run_all.py
 latexmk -pdf paper/main.tex
-```
+```## Complete Reproducible Package
+
+The complete reproducible package is available as a ZIP archive:
+
+`selection_symmetry_github_upload_clean.zip`
+
+GitHub shows this file as binary because it is compressed. Download and unzip it to access the manuscript source, final PDF, scripts, figures, result tables, citation metadata, license, and submission files.
+
 
 ## Scope
 
