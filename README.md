@@ -20,7 +20,7 @@ Install dependencies:
 pip install -r requirements.txt
 python scripts/run_all.py
 latexmk -pdf paper/main.tex
-```## Complete Reproducible Package
+``` ## Complete Reproducible Package
 
 The complete reproducible package is available as a ZIP archive:
 
