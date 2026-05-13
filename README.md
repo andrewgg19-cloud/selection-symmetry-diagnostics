@@ -1,5 +1,4 @@
-```text
-Improve README structure and citation guidance
+
 # The Filter Can Also Create Correlations
 
 **Invariance, Mathematical Homology, and the Induced Dependence Framework**
