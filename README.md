@@ -1,4 +1,3 @@
-
 # The Filter Can Also Create Correlations
 
 **Invariance, Mathematical Homology, and the Induced Dependence Framework**
@@ -46,3 +45,90 @@ Let the natural state be represented by:
 
 ```text
 D_N ~ P(R)
+```
+
+and the filtered observable state by:
+
+```text
+D_F ~ P(R | F = 1)
+```
+
+The observational deformation is measured as:
+
+```text
+Delta_obs = D_KL(D_N || D_F)
+```
+
+Induced dependence occurs when the filter is informative:
+
+```text
+I(R; F) > 0
+```
+
+In this case, the filter is not merely removing noise. It is participating in the construction of the observed dependency structure.
+
+---
+
+## Extended Description
+
+This repository presents the initial public version of **The Filter Can Also Create Correlations**, a research work within the broader **Induced Dependence Framework**.
+
+The central thesis is that filtering, selection, post-selection, curation, thresholding, and benchmark construction are not always passive operations applied after the fact to an underlying natural distribution. Under informative conditions, a filter can become an active structural operator: it can deform the observable state space, induce correlations, suppress variance, shift neutral reference points, and generate dependency patterns that are absent or weaker in the unconstrained natural state.
+
+The framework formalizes this process by distinguishing between a **Natural State** and a **Filtered Observable State**. The natural state is represented as an unconstrained distribution over an intrinsic phase space, while the filtered state is represented as a conditional distribution produced by an informative filter. Observational deformation is quantified through information-theoretic tools such as **Kullback-Leibler divergence** and **mutual information**. In this formulation, induced dependence occurs when the mutual information between the system state and the filtering mechanism is non-zero.
+
+This approach identifies a mathematical homology across several domains that are usually studied separately. In Bell-type controlled systems, post-selection and detector thresholds can be treated as filtering operations over an experimental phase space. In artificial intelligence, benchmark curation, RLHF, retrieval filtering, and recursive synthetic-data training can produce distributional drift and model collapse by truncating variance. In population biology, genetic bottlenecks, founder effects, and extreme drift can be interpreted as biological filtering processes that reduce diversity and alter dependency structure. In forensic and legal data analysis, curated digital evidence can be evaluated through the degree of observational deformation introduced by collection, selection, or algorithmic filtering.
+
+The repository is intended as a reproducible research package. It may contain the manuscript source, compiled PDF, simulation code, citation metadata, licensing information, and release materials for archival publication. The work is designed to support future mathematical refinement, simulation-based validation, and cross-domain application.
+
+---
+
+## Scientific Scope
+
+The paper connects a common structural pattern across domains:
+
+- **Bell-type controlled systems:** post-selection and detector thresholds as filtering operations.
+- **AI model collapse:** recursive training and benchmark filtering as variance truncation.
+- **Population genetics:** bottlenecks and founder effects as biological filtering.
+- **Forensic data auditing:** admissibility of curated data under measurable observational deformation.
+
+---
+
+## Related Repository
+
+[andrewgg19-cloud/induced-dependence-framework](https://github.com/andrewgg19-cloud/induced-dependence-framework)
+
+---
+
+## Citation
+
+A formal DOI will be added after Zenodo publication.
+
+Until then, cite as:
+
+```text
+Garcia, G. (2026). The Filter Can Also Create Correlations: Invariance, Mathematical Homology, and the Induced Dependence Framework. GitHub repository.
+```
+
+---
+
+## License
+
+Recommended licensing:
+
+- Scientific writing and documentation: **Creative Commons Attribution 4.0 International (CC BY 4.0)**
+- Code and simulations: **MIT License**
+
+---
+
+## Status
+
+Current status: initial public research repository.
+
+Next steps:
+
+1. Add or verify manuscript PDF and LaTeX source.
+2. Add simulation code and reproducibility notes.
+3. Create GitHub release `v0.1.0`.
+4. Archive release on Zenodo.
+5. Replace the placeholder DOI badge with the real DOI.
