@@ -2,9 +2,9 @@
 
 **Invariance, Mathematical Homology, and the Induced Dependence Framework**
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.TBD.svg)](https://doi.org/10.5281/zenodo.TBD)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20172257.svg)](https://doi.org/10.5281/zenodo.20172257)
 
-**Author:** German Garcia  
+**Author:** Andres German Garcia  
 **Role:** Investigador Titular Independiente  
 **Contact:** andrewgg19@gmail.com  
 **Year:** 2026
@@ -102,13 +102,22 @@ The paper connects a common structural pattern across domains:
 
 ## Citation
 
-A formal DOI will be added after Zenodo publication.
+The archived publication is available on [Zenodo](https://zenodo.org/records/20172257), published on 2026-05-13. Its deposit contains `selection-symmetry-diagnostics-main.zip`, including this repository's manuscript source, scripts, README, and original citation metadata.
 
-Until then, cite as:
+Cite the publication using Zenodo's registered title and author:
 
-```text
-Garcia, G. (2026). The Filter Can Also Create Correlations: Invariance, Mathematical Homology, and the Induced Dependence Framework. GitHub repository.
-```
+> German Garcia, A. (2026). *The Filter Can Also Create Correlations: Invariance and Mathematical Homology*. Zenodo. https://doi.org/10.5281/zenodo.20172257
+
+The extended subtitle used in this README describes the research program; the citation above preserves the registered publication title. `CITATION.cff` provides this publication as the preferred citation while retaining the repository's software metadata.
+
+### Keeping citations consistent
+
+- Use **10.5281/zenodo.20172257** for this archived publication. Its concept DOI, **10.5281/zenodo.20172256**, represents all versions; cite a specific version for reproducibility.
+- The archive describes the initial 0.1.0 materials, but its metadata does not declare a version field. The DOI identifies the deposited snapshot, not every subsequent commit on GitHub. When citing newer code, include its release tag or commit and its own archival DOI if one exists.
+- Keep author names, registered title, publication date, resource type, and DOI consistent between the README, `CITATION.cff`, and Zenodo. The publication date is distinct from the software release date.
+- If `.zenodo.json` is introduced, synchronize it too: Zenodo gives it precedence over `CITATION.cff` for GitHub release archiving.
+- Publish changed archival files as a new Zenodo version; metadata-only corrections can be made on the existing record.
+- Keep the companion framework's DOI separate. Zenodo record 20149858 also has a similar title but contains a different file set; it is not the deposited repository snapshot cited here.
 
 ---
 
@@ -130,5 +139,5 @@ Next steps:
 1. Add or verify manuscript PDF and LaTeX source.
 2. Add simulation code and reproducibility notes.
 3. Create GitHub release `v0.1.0`.
-4. Archive release on Zenodo.
-5. Replace the placeholder DOI badge with the real DOI.
+4. Archive future releases on Zenodo as new versions of the appropriate research object.
+5. Synchronize citation metadata with each published archival version.

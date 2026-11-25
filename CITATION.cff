@@ -1,10 +1,10 @@
 cff-version: 1.2.0
-title: "Selection Symmetry as an Operational Diagnostic for Correlations under Data Filtering"
-message: "If you use this repository, please cite it as below."
+title: "The Filter Can Also Create Correlations: Invariance, Mathematical Homology, and the Induced Dependence Framework"
+message: "Please cite the archived publication in preferred-citation. For specific code changes, also identify the release or commit used."
 type: software
 authors:
-  - family-names: "Garcia"
-    given-names: "German"
+  - family-names: "German Garcia"
+    given-names: "Andres"
 date-released: 2026-04-29
 repository-code: "https://github.com/andrewgg19-cloud/selection-symmetry-diagnostics"
 license: MIT
@@ -15,3 +15,15 @@ keywords:
   - Bell inequalities
   - information bounds
   - robust signal criterion
+preferred-citation:
+  type: generic
+  title: "The Filter Can Also Create Correlations: Invariance and Mathematical Homology"
+  authors:
+    - family-names: "German Garcia"
+      given-names: "Andres"
+  year: 2026
+  month: 5
+  publisher:
+    name: "Zenodo"
+  doi: "10.5281/zenodo.20172257"
+  url: "https://zenodo.org/records/20172257"
